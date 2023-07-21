@@ -20,7 +20,7 @@ defmodule ZipFilesApi.MixProject do
   def application do
     [
       mod: {ZipFilesApi.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :crypto]
     ]
   end
 
@@ -42,7 +42,9 @@ defmodule ZipFilesApi.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:google_api_storage, "~> 0.19.0"},
       {:goth, "~> 1.2.0"},
-      {:mogrify, "~> 0.9.3"}
+      {:mogrify, "~> 0.9.3"},
+      {:tesla, "~> 1.4"},
+      { :uuid, "~> 1.1" }
     ]
   end
 

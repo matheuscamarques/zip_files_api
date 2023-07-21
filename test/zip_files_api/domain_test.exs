@@ -1,18 +1,21 @@
 defmodule ZipFilesApi.DomainTest do
   use ZipFilesApiWeb.ConnCase, async: false
-  @image_src  "https://www.googleapis.com/storage/v1/b/zip_files_api/o/test_image.png"
-  test "Receive Payload and process PDF merge true" do
+
+  test "Receive Payload and process PDF and merge true" do
+    file_path = Application.app_dir(:zip_files_api, "priv") |> Path.join("test/test_image.png")
+    {:ok,_file_1} = Gcloud.upload_file(file_path,"file1.png")
+    {:ok,_file_2} = Gcloud.upload_file(file_path,"file2.png")
     payload = %{
       files: [
         %{
           document_key: "RG",
-          src: @image_src,
+          src: "file1.png",
           person_name: "Igor Aguiar",
           timestamp: DateTime.utc_now() |> DateTime.to_unix() |> Integer.to_string()
         },
         %{
           document_key: "CPF",
-          src: @image_src,
+          src: "file2.png",
           person_name: "Matheus Marques",
           timestamp: DateTime.utc_now() |> DateTime.to_unix() |> Integer.to_string()
         }
@@ -21,5 +24,7 @@ defmodule ZipFilesApi.DomainTest do
       merge: true,
       filename_pattern: "PERSON_NAME-TIMESTAMP-DOCUMENT_KEY.EXTENSION"
     }
+
+    ZipFilesApi.make_zip_file(payload)
   end
 end
