@@ -27,18 +27,37 @@ defmodule ZipFilesApi do
 
   @spec make_zip_file(payload()) :: any()
   def make_zip_file(
-        payload = %{
+        _payload = %{
           format: "PDF",
           merge: true,
-          files: files
+          files: files,
+          filename_pattern: _filename_pattern
         }
       ) do
     uuid = UUID.uuid1()
     # make folder /tmp/#{uuid}
-    File.mkdir("/tmp/#{uuid}")
+    folder_path = "./folder_test/"
+    File.mkdir("#{folder_path}#{uuid}")
     # download_files
-    # transform to files to pdf
-    # mount filename with pattern name
+    files_with_path =
+      Enum.map(files, fn file_data ->
+        file_name = file_data.src |> Path.basename()
+        {:ok, value} = Gcloud.download_file(file_data.src, "#{folder_path}#{uuid}/#{file_name}")
+
+        # transform to files to pdfd5
+        result = Mogrify.ImageToPdf.method(value)
+        # remove old_file
+        File.rm!("#{folder_path}#{uuid}/#{file_name}")
+        result.path
+      end)
+
+    pattern_path = "merged_test.pdf"
+
+    {:ok, merged_file_path} =
+      PdfMerger.MergePdfs.method(files_with_path, "#{folder_path}#{uuid}/#{pattern_path}")
+
+    {:ok, filename} = :zip.create("#{folder_path}#{uuid}/#{uuid}.zip", [String.to_charlist(merged_file_path)])
+    Gcloud.upload_file("#{folder_path}#{uuid}/#{uuid}.zip","#{uuid}.zip")
     # make zip file
     #
     # upload file
@@ -46,6 +65,6 @@ defmodule ZipFilesApi do
   end
 
   @spec make_zip_file(payload()) :: any()
-  def make_zip_file(payload) do
+  def make_zip_file(_payload) do
   end
 end
