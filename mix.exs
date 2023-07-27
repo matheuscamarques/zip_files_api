@@ -44,7 +44,8 @@ defmodule ZipFilesApi.MixProject do
       {:goth, "~> 1.2.0"},
       {:mogrify, "~> 0.9.3"},
       {:tesla, "~> 1.4"},
-      { :uuid, "~> 1.1" }
+      {:uuid, "~> 1.1"},
+      {:pdf_generator, ">=0.6.0"}
     ]
   end
 
