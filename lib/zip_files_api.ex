@@ -25,7 +25,7 @@ defmodule ZipFilesApi do
           filename_pattern: String.t()
         }
 
-  @spec make_zip_file(payload()) :: any()
+  @spec make_zip_file(payload()) :: {:ok, %GoogleApi.Storage.V1.Model.Object{}}
   def make_zip_file(
         _payload = %{
           format: "PDF",
