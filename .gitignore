@@ -28,3 +28,5 @@ zip_files_api-*.tar
 /priv/static/
 
 /priv/keys/service_account.json
+
+/folder_test/
