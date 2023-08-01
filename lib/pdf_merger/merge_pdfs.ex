@@ -26,6 +26,7 @@ defmodule PdfMerger.MergePdfs do
       case status do
         0 ->
           {:ok, output_file}
+
         _ ->
           {:error, "Error: PDF merging failed. #{output}"}
       end
